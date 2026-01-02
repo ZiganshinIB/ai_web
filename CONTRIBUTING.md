@@ -3,7 +3,11 @@
 [TOC]
 
 ## Как развернуть локально
+### Схема локальной инсталляции
+![fastai backend_local_installation.drawio.png](https://gitlab.dvmn.org/root/fastapi-articles/-/wikis/fastai/backend_local_installation.drawio.png)
 
+### Схема Prod инсталляции
+![fastai backend_prod_installation.drawio.png](https://gitlab.dvmn.org/root/fastapi-articles/-/wikis/fastai/backend_prod_installation.drawio.png)
 ### Необходимое ПО
 
 Для запуска ПО вам понадобятся консольный Git и Make. Инструкции по их установке ищите на
@@ -11,6 +15,7 @@
 
 - [Git SCM](https://git-scm.com/)
 - [GNU Make](https://www.gnu.org/software/make/)
+- 
 
 Вы можете проверить, установлены ли эти программы с помощью команд:
 ```shell
@@ -52,6 +57,29 @@ $ uv sync
 ```shell
 $ source .venv/bin/activate  # для Linux
 $ .\.venv\Scripts\activate  # Для Windows
+```
+### Работа с Ruff
+Ruff - это линтер, который проверяет код на соответствие стандартам.
+
+Для проверки кода на соответствие стандартам текущего проекта используете Ruff.
+```shell
+$ uv run ruff check --verbose
+```
+Для просмотра списка файлов который проверяются Ruff используете команду
+```shell
+$ uv run ruff check --show-files
+```
+Для просмотра конфигураций Ruff используете команду
+```shell
+$ uv run ruff check --show-settings
+```
+Для проверки конкретного файла используете команду
+```shell
+$ uv run ruff check <путь к файлу>
+```
+Посмотреть предлагаемое форматирования используете команду
+```shell
+$ uv run ruff format --check <путь к файлу>
 ```
 
 ### Настройка pre-commit хуков

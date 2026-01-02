@@ -77,9 +77,22 @@ $ uv run ruff check --show-settings
 ```shell
 $ uv run ruff check <путь к файлу>
 ```
+
 Посмотреть предлагаемое форматирования используете команду
 ```shell
 $ uv run ruff format --check <путь к файлу>
+```
+Посмотреть что изменится 
+```shell
+$ uv run ruff format --diff <путь к файлу>
+```
+Применить изменения
+```shell
+$ uv run ruff format <путь к файлу>
+```
+Исправить, что можно в стиле кода. Используете команду
+```shell
+$ uv run ruff check --fix <путь к файлу>
 ```
 
 ### Настройка pre-commit хуков

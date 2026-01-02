@@ -1,7 +1,7 @@
 [project]
-name = "fastai-starter"
+name = "ai-web"
 version = "0.1.0"
-description = "FastAI Starter Repository for backend developers."
+description = "FastAI for Web"
 readme = "README.md"
 requires-python = "==3.13.*"
 dependencies = [

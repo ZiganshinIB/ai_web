@@ -234,17 +234,11 @@ app.include_router(router)
 
 # Подключение фронтенда
 FRONTEND_DIST = Path(__file__).parent.parent / "frontend"
-# Статика (js, css, assets)
 app.mount(
-    "/assets",
-    StaticFiles(directory=FRONTEND_DIST / "assets"),
-    name="assets",
+    "/",
+    StaticFiles(directory=FRONTEND_DIST, html=True),
+    name="frontend",
 )
-# SPA fallback (React Router)
-@app.get("/{full_path:path}")
-def serve_react_app(full_path: str):
-    return FileResponse(FRONTEND_DIST / "index.html")
-
 ```
 
 ### Команды для быстрого запуска с помощью make

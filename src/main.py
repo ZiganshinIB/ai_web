@@ -9,6 +9,9 @@ app = FastAPI()
 
 app.include_router(api_router, prefix="/frontend-api")
 
+MEDIA_DIR = Path(__file__).parent.parent / "media"
+app.mount("/media", StaticFiles(directory=MEDIA_DIR), name="media")
+
 FRONTEND_DIST = Path(__file__).parent.parent / "frontend"
 app.mount(
     "/",

@@ -1,6 +1,7 @@
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl
+from pydantic import AliasGenerator, BaseModel, ConfigDict, Field, HttpUrl
 from pydantic.alias_generators import to_camel
-from pydantic.types import datetime
+
+from core.common import IsoDateTime
 
 
 class SiteGenerationRequest(BaseModel):
@@ -24,7 +25,7 @@ class SiteGenerationRequest(BaseModel):
 
 class CreateSiteRequest(SiteGenerationRequest):
 
-    title: str | None
+    title: str | None = None
     """Название сайта"""
 
     model_config = ConfigDict(
@@ -42,7 +43,7 @@ class CreateSiteRequest(SiteGenerationRequest):
 class SiteResponse(BaseModel):
     pk: int = Field(..., gt=0, alias="id")
     """ID сайта"""
-    title: str
+    title: str | None
     """Название сайта"""
     html_code_download_url: HttpUrl
     """Ссылка на скачивание HTML кода сайта"""
@@ -52,13 +53,15 @@ class SiteResponse(BaseModel):
     """Ссылка на скриншот сайта"""
     prompt: str
     """Описание сайта"""
-    created_at: datetime
+    created_at: IsoDateTime
     """Дата создания сайта"""
-    updated_at: datetime
+    updated_at: IsoDateTime
     """Дата обновления сайта"""
 
     model_config = ConfigDict(
-        alias_generator=to_camel,
+        alias_generator=AliasGenerator(
+            serialization_alias=to_camel,
+        ),
         populate_by_name=True,
         json_schema_extra={
             "examples": [

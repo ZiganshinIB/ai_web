@@ -148,6 +148,104 @@ $ uv remove beautifulsoup4
 ```shell
 $ uv lock
 ```
+#### Как развернуть frontend
+##### На OS Linux при помощи NGINX
+Скачайте [frontend](https://dvmn.org/filer/canonical/1750917110/1035/) в zip-архиве и разархивируйте его в директорию /var/www/frontend
+Дайте доступ к этой директории для пользователя nginx.
+
+Как посмотреть пользователя nginx?
+Пользователь nginx определяется дерективой `user` в конфигурационном файле NGINX.
+```shell
+$ sudo nginx -T | grep user
+```
+Как правило это `nginx` или `www-data`
+```shell
+$ sudo chown -R www-data:www-data /var/www/frontend
+# or
+$ sudo chown -R nginx:nginx /var/www/frontend
+```
+Далее создайте конфигурационный файл для NGINX. можно создать в директории /etc/nginx/conf.d/ai-web.com.conf или в директории /etc/nginx/sites-enabled/ai-web.com.conf
+
+```nginx
+server {
+    listen 80;
+    server_name ai-web.com;
+    
+    root /var/www/frontend;
+    index index.html;
+ 
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /assets/ {
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    location ~* \.(js|css|woff2|ttf|otf|eot|svg|ico|png|jpg|jpeg|gif)$ {
+        add_header Cache-Control "public";
+        access_log off; 
+    }
+}
+```
+Для того что бы `ai-web.com` работало нужно добавить его в список доменов в директории `/etc/hosts`
+```shell
+sudo sed -i '/^127\.0\.0\.1/ s/$/ ai-web.local/' /etc/hosts
+```
+после этого нужно перезагрузить NGINX
+```shell
+sudo systemctl reload nginx
+# or
+sudo nginx -s reload
+```
+##### При помощи FastAPI 
+Распологаем frontend в директории в корневой директории проекта. Следующим образом
+```text 
+project
+├── frontend
+│   ├── assets\
+│   ├── frontend-settings.json
+│   ├── grid.svg
+│   ├── index.html
+│   └── vite.svg
+├── src
+│   ├── main.py
+
+```
+Где frontend это директория с фронтендом, src - директория с бекендом.
+Далее main.py подключается в frontend в конце, что бы не мешала работе другим маршрутам.
+```python 
+from fastapi import  APIRouter, FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from pathlib import Path
+
+app = FastAPI()
+
+# Ваши маршруты
+router = APIRouter()
+# Пример маршрута
+@router.get("/test")
+async def index():
+    return {"message": "Hello World"}
+# Добавление маршрутов
+app.include_router(router)
+
+# Подключение фронтенда
+FRONTEND_DIST = Path(__file__).parent.parent / "frontend"
+# Статика (js, css, assets)
+app.mount(
+    "/assets",
+    StaticFiles(directory=FRONTEND_DIST / "assets"),
+    name="assets",
+)
+# SPA fallback (React Router)
+@app.get("/{full_path:path}")
+def serve_react_app(full_path: str):
+    return FileResponse(FRONTEND_DIST / "index.html")
+
+```
 
 ### Команды для быстрого запуска с помощью make
 

@@ -1,34 +1,17 @@
 from pathlib import Path
 
-from fastapi import APIRouter, FastAPI
-from fastapi.responses import FileResponse
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+
+from api import router as api_router
 
 app = FastAPI()
 
-# Ваши маршруты
-router = APIRouter()
+app.include_router(api_router, prefix="/frontend-api")
 
-
-# Пример маршрута
-@router.get("/test")
-async def index():
-    return {"message": "Hello World"}
-
-
-app.include_router(router)
-
-# Подключение фронтенда
 FRONTEND_DIST = Path(__file__).parent.parent / "frontend"
-# Статика (js, css, assets)
 app.mount(
-    "/assets",
-    StaticFiles(directory=FRONTEND_DIST / "assets"),
-    name="assets",
+    "/",
+    StaticFiles(directory=FRONTEND_DIST, html=True),
+    name="frontend",
 )
-
-
-# SPA fallback (React Router)
-@app.get("/{full_path:path}")
-def serve_react_app(full_path: str):
-    return FileResponse(FRONTEND_DIST / "index.html")

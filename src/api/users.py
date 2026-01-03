@@ -2,7 +2,7 @@ import datetime
 
 from fastapi import APIRouter
 
-from core.schema import User
+from core.schema import UserDetailsResponse
 
 router = APIRouter()
 
@@ -20,7 +20,7 @@ MOCK_USER = {
 @router.get(
     path="/me",
     summary="Получить учетные данные пользователя",
-    response_model=User,
+    response_model=UserDetailsResponse,
 )
-async def me() -> User:
-    return User.model_validate(MOCK_USER)
+async def me() -> UserDetailsResponse:
+    return UserDetailsResponse.model_validate(MOCK_USER)

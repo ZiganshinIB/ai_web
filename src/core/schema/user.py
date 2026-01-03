@@ -3,7 +3,7 @@ from pydantic.alias_generators import to_camel
 from pydantic.types import datetime
 
 
-class User(BaseModel):
+class UserDetailsResponse(BaseModel):
 
     profile_id: int = Field(..., gt=0)
     """Идентификатор профиля"""

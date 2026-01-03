@@ -1,6 +1,7 @@
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import AliasGenerator, BaseModel, ConfigDict, EmailStr, Field
 from pydantic.alias_generators import to_camel
-from pydantic.types import datetime
+
+from core.common import IsoDateTime
 
 
 class UserDetailsResponse(BaseModel):
@@ -11,15 +12,17 @@ class UserDetailsResponse(BaseModel):
     """Имя пользователя"""
     email: EmailStr
     """Email пользователя"""
-    registered_at: datetime
+    registered_at: IsoDateTime
     """Дата регистрации пользователя"""
-    updated_at: datetime
+    updated_at: IsoDateTime
     """Дата последнего обновления профиля"""
     is_active: bool
     """Признак активности пользователя"""
 
     model_config = ConfigDict(
-        alias_generator=to_camel,
+        alias_generator=AliasGenerator(
+            serialization_alias=to_camel,
+        ),
         populate_by_name=True,
         json_schema_extra={
             "examples": [

@@ -8,10 +8,10 @@ router = APIRouter()
 
 MOCK_USER = {
     "email": "user123@example.com",
-    "isActive": True,
-    "profileId": 1,
-    "registeredAt": datetime.datetime.now(datetime.UTC),
-    "updatedAt": datetime.datetime.now(datetime.UTC),
+    "is_active": True,
+    "profile_id": 1,
+    "registered_at": datetime.datetime.now(datetime.UTC),
+    "updated_at": datetime.datetime.now(datetime.UTC),
     "username": "user123",
 }
 

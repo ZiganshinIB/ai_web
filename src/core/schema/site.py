@@ -43,13 +43,13 @@ class CreateSiteRequest(SiteGenerationRequest):
 class SiteResponse(BaseModel):
     pk: int = Field(..., gt=0, alias="id")
     """ID сайта"""
-    title: str | None
+    title: str
     """Название сайта"""
-    html_code_download_url: HttpUrl
+    html_code_download_url: HttpUrl | None
     """Ссылка на скачивание HTML кода сайта"""
-    html_code_url: HttpUrl
+    html_code_url: HttpUrl | None
     """Ссылка на HTML код сайта"""
-    screenshot_url: HttpUrl
+    screenshot_url: HttpUrl | None
     """Ссылка на скриншот сайта"""
     prompt: str
     """Описание сайта"""

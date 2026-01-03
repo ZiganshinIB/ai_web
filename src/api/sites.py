@@ -48,7 +48,7 @@ async def generate_text_chunks(relative_path: str):
 async def create_site(site: Annotated[CreateSiteRequest, Body()]) -> SiteResponse:
     local_mock = MOCK_SITE_RESPONSE.copy()
     local_mock["prompt"] = site.prompt
-    local_mock["title"] = site.title
+    local_mock["title"] = site.title if site.title else local_mock["title"]
     return SiteResponse.model_validate(local_mock)
 
 
@@ -58,7 +58,7 @@ async def create_site(site: Annotated[CreateSiteRequest, Body()]) -> SiteRespons
 )
 async def generate_site(
     site_id: Annotated[int, Path(gt=0)],
-    site: Annotated[SiteGenerationRequest | None, Body()],
+    site: SiteGenerationRequest | None = Body(default=None, title="SiteGenerationRequest"),
 ) -> StreamingResponse:
     """Код сайта будет транслироваться стримом по мере генерации."""
     uri_path = "/media/index.html"

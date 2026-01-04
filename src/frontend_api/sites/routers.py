@@ -2,6 +2,7 @@ import asyncio
 from pathlib import Path as OSPath
 from typing import Annotated
 
+import aiofiles
 from fastapi import APIRouter, Body, Path
 from fastapi.exceptions import HTTPException
 from fastapi.responses import StreamingResponse
@@ -20,9 +21,9 @@ async def generate_text_chunks(relative_path: str):
 
     if not file_path.is_file() or MEDIA_DIR not in file_path.parents:
         raise HTTPException(status_code=400, detail="Invalid file path")
-    with file_path.open("r", encoding="utf-8") as file:
-        for line in file:
-            yield line.encode("utf-8")
+    async with aiofiles.open(file_path, encoding="utf-8") as file:
+        async for line in file:
+            yield line
             await asyncio.sleep(0.05)
 
 

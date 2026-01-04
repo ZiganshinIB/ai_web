@@ -45,3 +45,4 @@ $ fastapi dev src/main.py
 ```text
 <Название переменной>=<Значение> 
 ```
+Необходимые переменные для работы проекта указаны в файле [`ENVIRONMENT_VARIABLES.md`](./ENVIRONMENT_VARIABLES.md).

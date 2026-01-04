@@ -1,19 +1,9 @@
-import datetime
-
 from fastapi import APIRouter
 
-from core.schema import UserDetailsResponse
+from .mocks import MOCK_USER
+from .schemas import UserDetailsResponse
 
 router = APIRouter()
-
-MOCK_USER = {
-    "email": "user123@example.com",
-    "is_active": True,
-    "profile_id": 1,
-    "registered_at": datetime.datetime.now(datetime.UTC),
-    "updated_at": datetime.datetime.now(datetime.UTC),
-    "username": "user123",
-}
 
 
 # TODO: Mock роутер потом переделать

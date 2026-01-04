@@ -3,14 +3,14 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from api import router as api_router
+from frontend_api import app as frontend_app
 
 app = FastAPI()
 
-app.include_router(api_router, prefix="/frontend-api")
-
 MEDIA_DIR = Path(__file__).parent.parent / "media"
 app.mount("/media", StaticFiles(directory=MEDIA_DIR), name="media")
+
+app.mount("/frontend-api", frontend_app)
 
 FRONTEND_DIST = Path(__file__).parent.parent / "frontend"
 app.mount(

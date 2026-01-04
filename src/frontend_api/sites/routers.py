@@ -1,5 +1,4 @@
 import asyncio
-import datetime
 from pathlib import Path as OSPath
 from typing import Annotated
 
@@ -7,30 +6,18 @@ from fastapi import APIRouter, Body, Path
 from fastapi.exceptions import HTTPException
 from fastapi.responses import StreamingResponse
 
-from core.schema import CreateSiteRequest, GeneratedSitesResponse, SiteGenerationRequest, SiteResponse
+from .mocks import MOCK_SITE_RESPONSE
+from .schemas import CreateSiteRequest, GeneratedSitesResponse, SiteGenerationRequest, SiteResponse
 
 router = APIRouter()
 
-MEDIA_DIR = OSPath(__file__).parent.parent.parent / "media"
-
-# MOCK данные из СУБД (SQLAlchemy model)
-MOCK_SITE_RESPONSE = {
-    "pk": 1,
-    "title": "Фан клуб Домино",
-    "prompt": "Сайт любителей играть в домино",
-    "html_code_download_url": "http://127.0.0.1:8000/media/index.html?response-content-disposition=attachment",
-    "html_code_url": "http://127.0.0.1:8000/media/index.html",
-    "screenshot_url": "http://127.0.0.1:8000/media/index.png",
-    "created_at": datetime.datetime.now(datetime.UTC),
-    "updated_at": datetime.datetime.now(datetime.UTC),
-}
+MEDIA_DIR = OSPath(__file__).parent.parent.parent.parent / "media"
 
 
 async def generate_text_chunks(relative_path: str):
-    # Защита от Path Traversal
     relative_path = relative_path.lstrip("/").lstrip("media").lstrip("/")
     file_path = (MEDIA_DIR / relative_path).resolve()
-    # Защита от path traversal
+
     if not file_path.is_file() or MEDIA_DIR not in file_path.parents:
         raise HTTPException(status_code=400, detail="Invalid file path")
     with file_path.open("r", encoding="utf-8") as file:

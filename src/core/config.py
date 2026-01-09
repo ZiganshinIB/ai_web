@@ -29,9 +29,11 @@ class AIConfig(BaseModel):
     '''Ключ доступа'''
     max_connections: int | None = Field(None, gt=0)
     '''Количество подключений'''
-    base_url: HttpUrl = HttpUrl("https://bothub.chat/api/v2/openai/v1/chat/completions")
+    base_url: HttpUrl | None = None
     '''Базовый URL'''
-    model: str = "deepseek-chat-v3-0324"
+    timeout: int = Field(20, gt=0)
+    '''Время ожидания в секундах'''
+    model: str | None = None
     '''Модель нейронной сети'''
 
     model_config = ConfigDict(
@@ -46,6 +48,7 @@ class Settings(BaseSettings):
     '''Конфигурация AI'''
     unsplash: UnsplashConfig
     '''Конфигурация Unsplash'''
+    media_dir: Path = PROJECT_DIR / "media"
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_DIR / ".env",
